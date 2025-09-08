@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハロウィンビンゴ</title>
+    <style>
+        body { text-align: center; font-family: 'Arial', sans-serif; background-color: #f7f7f7; color: #333; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #fff; }
+        #countdown { font-size: 5rem; color: #ff6600; font-weight: bold; }
+        #word-display { font-size: 3rem; color: #4CAF50; font-weight: bold; margin-top: 20px; }
+        button { font-size: 1.5rem; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: #ff6600; color: white; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ハロウィンビンゴ</h1>
+        <div id="countdown"></div>
+        <div id="word-display"></div>
+        <button onclick="startBingo()">スタート</button>
+    </div>
+    
+    <script>
+        let countdownTimer;
+
+        function startBingo() {
+            let count = 3;
+            document.getElementById('countdown').textContent = count;
+            document.querySelector('button').disabled = true;
+
+            countdownTimer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    document.getElementById('countdown').textContent = count;
+                } else {
+                    clearInterval(countdownTimer);
+                    document.getElementById('countdown').textContent = 'スタート！';
+                    getNewWord();
+                }
+            }, 1000);
+        }
+
+        async function getNewWord() {
+            document.getElementById('countdown').textContent = '';
+            document.getElementById('word-display').textContent = '👻';
+            const response = await fetch('/get_word');
+            const data = await response.json();
+            
+            if (data.is_complete) {
+                document.getElementById('word-display').textContent = data.word;
+                document.querySelector('button').style.display = 'none';
+            } else {
+                document.getElementById('word-display').textContent = data.word;
+                document.querySelector('button').textContent = '次のワード';
+                document.querySelector('button').disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
