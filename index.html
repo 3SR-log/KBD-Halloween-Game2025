@@ -10,6 +10,12 @@
         #countdown { font-size: 5rem; color: #ff6600; font-weight: bold; }
         #word-display { font-size: 3rem; color: #4CAF50; font-weight: bold; margin-top: 20px; }
         button { font-size: 1.5rem; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: #ff6600; color: white; margin-top: 20px; }
+        
+        /* 新しいスタイルを追加 */
+        #used-words-container { margin-top: 40px; }
+        #used-words-container h2 { font-size: 1.5rem; color: #555; }
+        #used-words-list { list-style-type: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; }
+        #used-words-list li { margin: 5px; padding: 10px; background-color: #eee; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -18,6 +24,11 @@
         <div id="countdown"></div>
         <div id="word-display"></div>
         <button onclick="startBingo()">スタート</button>
+        
+        <div id="used-words-container">
+            <h2>出たワード</h2>
+            <ul id="used-words-list"></ul>
+        </div>
     </div>
     
     <script>
@@ -53,7 +64,21 @@
                 document.getElementById('word-display').textContent = data.word;
                 document.querySelector('button').textContent = '次のワード';
                 document.querySelector('button').disabled = false;
+                
+                // ここで出たワードをリストに追加する
+                updateUsedWordsList(data.used_words);
             }
+        }
+        
+        // 新しい関数を追加
+        function updateUsedWordsList(words) {
+            const list = document.getElementById('used-words-list');
+            list.innerHTML = ''; // リストを一度クリア
+            words.forEach(word => {
+                const li = document.createElement('li');
+                li.textContent = word;
+                list.appendChild(li);
+            });
         }
     </script>
 </body>
