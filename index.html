@@ -36,6 +36,11 @@
 
         function startBingo() {
             let count = 3;
+            // 修正箇所：スタート時にワード表示エリアとリストをクリアする
+            document.getElementById('countdown').textContent = '';
+            document.getElementById('word-display').textContent = '';
+            document.getElementById('used-words-list').innerHTML = '';
+            
             document.getElementById('countdown').textContent = count;
             document.querySelector('button').disabled = true;
 
