@@ -6,12 +6,15 @@
     <title>ハロウィンビンゴ</title>
     <style>
         body { text-align: center; font-family: 'Arial', sans-serif; background-color: #f7f7f7; color: #333; }
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #fff; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #fff; position: relative; }
+        
+        /* 新しいスタイル: ワード数表示用の要素 */
+        #word-count { position: absolute; top: 10px; right: 10px; font-size: 1.2rem; font-weight: bold; color: #ff6600; }
+        
         #countdown { font-size: 5rem; color: #ff6600; font-weight: bold; }
         #word-display { font-size: 3rem; color: #4CAF50; font-weight: bold; margin-top: 20px; }
         button { font-size: 1.5rem; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: #ff6600; color: white; margin-top: 20px; }
         
-        /* 新しいスタイルを追加 */
         #used-words-container { margin-top: 40px; }
         #used-words-container h2 { font-size: 1.5rem; color: #555; }
         #used-words-list { list-style-type: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; }
@@ -20,6 +23,8 @@
 </head>
 <body>
     <div class="container">
+        <div id="word-count"></div>
+        
         <h1>ハロウィンビンゴ</h1>
         <div id="countdown"></div>
         <div id="word-display"></div>
@@ -36,11 +41,11 @@
 
         function startBingo() {
             let count = 3;
-            // 修正箇所：スタート時にワード表示エリアとリストをクリアする
             document.getElementById('countdown').textContent = '';
             document.getElementById('word-display').textContent = '';
             document.getElementById('used-words-list').innerHTML = '';
-            
+            document.getElementById('word-count').textContent = '0ワード目'; // 新規追加
+
             document.getElementById('countdown').textContent = count;
             document.querySelector('button').disabled = true;
 
@@ -65,6 +70,7 @@
             if (data.is_complete) {
                 document.getElementById('word-display').textContent = data.word;
                 document.querySelector('button').style.display = 'none';
+                document.getElementById('word-count').textContent = `${data.used_words.length}ワード目`; // 最終ワード数の表示
             } else {
                 document.getElementById('word-display').textContent = data.word;
                 document.querySelector('button').textContent = '次のワード';
@@ -75,15 +81,16 @@
             }
         }
         
-        // 新しい関数を追加
         function updateUsedWordsList(words) {
             const list = document.getElementById('used-words-list');
-            list.innerHTML = ''; // リストを一度クリア
+            list.innerHTML = '';
             words.forEach(word => {
                 const li = document.createElement('li');
                 li.textContent = word;
                 list.appendChild(li);
             });
+            // 新規追加: ワード数を更新
+            document.getElementById('word-count').textContent = `${words.length}ワード目`;
         }
     </script>
 </body>
